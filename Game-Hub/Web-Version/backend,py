@@ -1,0 +1,98 @@
+# backend.py
+
+import json
+import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+# --- Flask App Setup ---
+app = Flask(__name__)
+CORS(app)  # Enable Cross-Origin Resource Sharing
+
+# --- Existing Backend Logic (adapted for Flask) ---
+DATA_FILE = 'player_data.json'
+
+def load_data():
+    if not os.path.exists(DATA_FILE) or os.path.getsize(DATA_FILE) == 0:
+        return {}
+    try:
+        with open(DATA_FILE, 'r') as f:
+            return json.load(f)
+    except (json.JSONDecodeError, FileNotFoundError):
+        return {}
+
+def save_data(data):
+    with open(DATA_FILE, 'w') as f:
+        json.dump(data, f, indent=4)
+
+# ==============================================================================
+# SECTION 1: API ENDPOINTS
+# These are the URLs our frontend will send requests to.
+# ==============================================================================
+
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username or not password:
+        return jsonify({"success": False, "message": "Username and password are required."}), 400
+
+    all_users = load_data()
+    if username in all_users:
+        return jsonify({"success": False, "message": "Username already exists."}), 409
+
+    all_users[username] = {
+        "password": password, # In a real app, hash this!
+        "scores": {
+            "game1_number_guess": "Not Played",
+            "game2_rps": "Not Played"
+        }
+    }
+    save_data(all_users)
+    return jsonify({"success": True, "message": "Account created successfully!"})
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+
+    all_users = load_data()
+    user = all_users.get(username)
+
+    if user and user['password'] == password:
+        return jsonify({"success": True, "message": "Login successful!"})
+    else:
+        return jsonify({"success": False, "message": "Invalid username or password."}), 401
+
+@app.route('/scores/<username>', methods=['GET'])
+def get_scores(username):
+    all_users = load_data()
+    user = all_users.get(username)
+    if user:
+        return jsonify({"success": True, "scores": user['scores']})
+    else:
+        return jsonify({"success": False, "message": "User not found."}), 404
+
+@app.route('/update_score', methods=['POST'])
+def update_score():
+    data = request.get_json()
+    username = data.get('username')
+    game_id = data.get('game_id')
+    score = data.get('score')
+
+    all_users = load_data()
+    user = all_users.get(username)
+    if not user:
+        return jsonify({"success": False, "message": "User not found."}), 404
+
+    # Update score logic (simplified for clarity)
+    user['scores'][game_id] = score
+    save_data(all_users)
+    return jsonify({"success": True, "message": f"Score for {game_id} updated successfully!"})
+
+# --- Run the Flask App ---
+if __name__ == '__main__':
+    app.run(debug=True) # debug=True allows auto-reloading when you save

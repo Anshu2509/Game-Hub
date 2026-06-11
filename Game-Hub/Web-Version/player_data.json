@@ -1,0 +1,26 @@
+{
+    "anshu": {
+        "password": "anshu2123",
+        "scores": {
+            "game1_number_guess": 7,
+            "game2_rps": 0,
+            "game3_snake": 40
+        }
+    },
+    "swati": {
+        "password": "swati@123",
+        "scores": {
+            "game1_number_guess": 12,
+            "game2_rps": "Not Played",
+            "game3_snake": "Not Played"
+        }
+    },
+    "shi": {
+        "password": "df",
+        "scores": {
+            "game1_number_guess": "Not Played",
+            "game2_rps": 3,
+            "game3_snake": 20
+        }
+    }
+}

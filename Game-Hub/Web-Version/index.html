@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <div id="auth-screen" class="screen">
+            <h1>Game Hub</h1>
+            <div id="login-form">
+                <h2>Login</h2>
+                <input type="text" id="login-username" placeholder="Username">
+                <input type="password" id="login-password" placeholder="Password">
+                <button id="login-btn">Login</button>
+                <p>Don't have an account? <a href="#" id="show-register-link">Register here</a>.</p>
+            </div>
+            <div id="register-form" class="hidden">
+                <h2>Register</h2>
+                <input type="text" id="register-username" placeholder="Username">
+                <input type="password" id="register-password" placeholder="Password">
+                <button id="register-btn">Register</button>
+                <p>Already have an account? <a href="#" id="show-login-link">Login here</a>.</p>
+            </div>
+        </div>
+
+        <div id="main-menu-screen" class="screen hidden">
+            <h2 id="welcome-message"></h2>
+            <button class="game-btn" data-game="number_guess">Play Number Guessing</button>
+            <button class="game-btn" data-game="rps">Play Rock, Paper, Scissors</button>
+            <button id="show-scores-btn">Show My Scores</button>
+            <button id="logout-btn">Logout</button>
+        </div>
+
+        <div id="game-screen" class="screen hidden">
+            <h2 id="game-title"></h2>
+            <div id="game-content"></div>
+            <button id="back-to-menu-btn">Back to Main Menu</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
